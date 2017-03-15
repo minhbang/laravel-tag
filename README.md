@@ -1,5 +1,5 @@
-# Laravel Authorization
-Quản lý Role - Permission của User
+# Laravel Tag
+Add tags to model
 
 ## Install
 
@@ -8,11 +8,11 @@ Quản lý Role - Permission của User
 	"repositories": [
         {
             "type": "vcs",
-            "url": "https://github.com/minhbang/laravel-authority"
+            "url": "https://github.com/minhbang/laravel-tag"
         }
     ],
     "require": {
-        "minhbang/laravel-authority": "dev-master"
+        "minhbang/laravel-tag": "dev-master"
     }
 ```
 ``` bash
