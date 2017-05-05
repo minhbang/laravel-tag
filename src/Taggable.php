@@ -9,6 +9,10 @@
  */
 trait Taggable
 {
+    /**
+     * @var \Illuminate\Support\Collection
+     */
+    public static $usedTagNames;
     protected $tagsDirty = false;
     protected $tagsTmp;
 
@@ -19,12 +23,31 @@ trait Taggable
      */
     public static function bootTaggable()
     {
-        static::deleting(function (Taggable $model) {
+
+        static::deleting(function ($model) {
+            /** @var Taggable $model*/
             $model->untag();
         });
-        static::saved(function (Taggable $model) {
+        static::saved(function ($model) {
+            /** @var Taggable $model*/
             $model->saveTags();
         });
+    }
+
+    /**
+     * Tất cả tags đang sử dụng đối với 'model type' này
+     *
+     * @param string $glue
+     *
+     * @return string
+     */
+    public static function usedTagNames($glue = ',')
+    {
+        if (is_null(static::$usedTagNames)) {
+            static::$usedTagNames = Tag::usedBy(static::class)->get()->pluck('name');
+        }
+
+        return implode($glue, static::$usedTagNames->toArray());
     }
 
     /**
