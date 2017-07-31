@@ -1,5 +1,7 @@
 <?php namespace Minhbang\Tag;
 
+use DB;
+
 /**
  * Class Taggable
  *
@@ -7,8 +9,7 @@
  * @package Minhbang\Tag
  * @mixin \Eloquent
  */
-trait Taggable
-{
+trait Taggable {
     /**
      * @var \Illuminate\Support\Collection
      */
@@ -21,17 +22,16 @@ trait Taggable
      *
      * @return void
      */
-    public static function bootTaggable()
-    {
+    public static function bootTaggable() {
 
-        static::deleting(function ($model) {
-            /** @var Taggable $model*/
+        static::deleting( function ( $model ) {
+            /** @var Taggable $model */
             $model->untag();
-        });
-        static::saved(function ($model) {
-            /** @var Taggable $model*/
+        } );
+        static::saved( function ( $model ) {
+            /** @var Taggable $model */
             $model->saveTags();
-        });
+        } );
     }
 
     /**
@@ -41,41 +41,37 @@ trait Taggable
      *
      * @return string
      */
-    public static function usedTagNames($glue = ',')
-    {
-        if (is_null(static::$usedTagNames)) {
-            static::$usedTagNames = Tag::usedBy(static::class)->get()->pluck('name');
+    public static function usedTagNames( $glue = ',' ) {
+        if ( is_null( static::$usedTagNames ) ) {
+            static::$usedTagNames = Tag::usedBy( static::class )->get()->pluck( 'name' );
         }
 
-        return implode($glue, static::$usedTagNames->toArray());
+        return implode( $glue, static::$usedTagNames->toArray() );
     }
 
     /**
      * Luu tags đã gán vào biến tạm
      */
-    public function saveTags()
-    {
-        if ($this->tagsDirty) {
-            $this->retag($this->tagsTmp);
+    public function saveTags() {
+        if ( $this->tagsDirty ) {
+            $this->retag( $this->tagsTmp );
         }
     }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
      */
-    public function tags()
-    {
-        return $this->morphToMany(Tag::class, 'taggable');
+    public function tags() {
+        return $this->morphToMany( Tag::class, 'taggable' );
     }
 
     /**
      * @return string[]
      */
-    public function tagNames()
-    {
-        return $this->tags->map(function ($item) {
+    public function tagNames() {
+        return $this->tags->map( function ( $item ) {
             return $item->name;
-        })->toArray();
+        } )->toArray();
     }
 
     /**
@@ -83,8 +79,7 @@ trait Taggable
      *
      * @param string|array $value
      */
-    public function setTagNamesAttribute($value)
-    {
+    public function setTagNamesAttribute( $value ) {
         $this->tagsDirty = true;
         $this->tagsTmp = $value;
     }
@@ -94,20 +89,18 @@ trait Taggable
      *
      * @return string
      */
-    public function getTagNamesAttribute()
-    {
-        return implode(',', $this->tagNames());
+    public function getTagNamesAttribute() {
+        return implode( ',', $this->tagNames() );
     }
 
     /**
      * @param string|array $tags
      */
-    public function tag($tags)
-    {
-        $ids = array_map(function ($tag) {
-            return Tag::firstOrCreate(['name' => $tag])->getKey();
-        }, mb_array_sure($tags));
-        $this->tags()->attach($ids);
+    public function tag( $tags ) {
+        $ids = array_map( function ( $tag ) {
+            return Tag::firstOrCreate( [ 'name' => $tag ] )->getKey();
+        }, mb_array_sure( $tags ) );
+        $this->tags()->attach( $ids );
     }
 
     /**
@@ -115,23 +108,21 @@ trait Taggable
      *
      * @param null|string|array $tags
      */
-    public function untag($tags = null)
-    {
-        $ids = is_null($tags) ? null : (empty($tags) ? [] : Tag::findByNames($tags)->pluck('id'));
-        $this->tags()->detach($ids);
+    public function untag( $tags = null ) {
+        $ids = is_null( $tags ) ? null : ( empty( $tags ) ? [] : Tag::findByNames( $tags )->pluck( 'id' ) );
+        $this->tags()->detach( $ids );
         Tag::deleteUnused();
     }
 
     /**
      * @param string|array $tags
      */
-    public function retag($tags)
-    {
-        $tags = mb_array_sure($tags);
-        if ($tags) {
+    public function retag( $tags ) {
+        $tags = mb_array_sure( $tags );
+        if ( $tags ) {
             $currentTagNames = $this->tagNames();
-            $this->untag(array_diff($currentTagNames, $tags));
-            $this->tag(array_diff($tags, $currentTagNames));
+            $this->untag( array_diff( $currentTagNames, $tags ) );
+            $this->tag( array_diff( $tags, $currentTagNames ) );
         } else {
             $this->untag();
         }
@@ -146,9 +137,8 @@ trait Taggable
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeTagged($query, $tags, $all = false)
-    {
-        return $all ? $this->scopeTaggedAll($query, $tags) : $this->scopeTaggedOne($query, $tags);
+    public function scopeTagged( $query, $tags, $all = false ) {
+        return $all ? $this->scopeTaggedAll( $query, $tags ) : $this->scopeTaggedOne( $query, $tags );
     }
 
     /**
@@ -159,9 +149,8 @@ trait Taggable
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeTaggedOne($query, $tags)
-    {
-        return $query->whereIn($this->getTable() . '.' . $this->getKeyName(), $this->getTaggedIds($tags));
+    public function scopeTaggedOne( $query, $tags ) {
+        return $query->whereIn( $this->getTable() . '.' . $this->getKeyName(), $this->getTaggedIds( $tags ) );
     }
 
     /**
@@ -172,10 +161,9 @@ trait Taggable
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeTaggedAll($query, $tags)
-    {
-        foreach (mb_array_sure($tags) as $tag) {
-            $query->whereIn($this->getTable() . '.' . $this->getKeyName(), $this->getTaggedIds($tag));
+    public function scopeTaggedAll( $query, $tags ) {
+        foreach ( mb_array_sure( $tags ) as $tag ) {
+            $query->whereIn( $this->getTable() . '.' . $this->getKeyName(), $this->getTaggedIds( $tag ) );
         }
 
         return $query;
@@ -188,9 +176,8 @@ trait Taggable
      *
      * @return \Illuminate\Database\Query\Builder|static
      */
-    public function scopeRelated($query)
-    {
-        return $this->scopeTaggedAll($query, $this->getTagNamesAttribute());
+    public function scopeRelated( $query ) {
+        return $this->scopeTaggedAll( $query, $this->getTagNamesAttribute() );
     }
 
     /**
@@ -202,12 +189,11 @@ trait Taggable
      *
      * @return \Illuminate\Database\Query\Builder|static
      */
-    public function scopeOrderByMatchedTag($query, $tags, $direction = 'desc')
-    {
-        if (empty($tags = mb_array_sure($tags))) {
+    public function scopeOrderByMatchedTag( $query, $tags, $direction = 'desc' ) {
+        if ( empty( $tags = mb_array_sure( $tags ) ) ) {
             return $query;
         }
-        $tags = implode(',', $tags);
+        $tags = "'" . implode( "','", $tags ) . "'";
         $type = $this->getMorphClass();
 
         return $query->addSelect(
@@ -218,11 +204,11 @@ trait Taggable
                     LEFT JOIN tags ON taggables.tag_id = tags.id
                     WHERE
                         taggables.taggable_id = {$this->getTable()}.id AND
-                        taggables.taggable_type = $type AND
-                        tags.name IN ($tags)
+                        taggables.taggable_type = '{$type}' AND
+                        tags.name IN ({$tags})
                 ) AS count_matched_tag"
             )
-        )->orderBy('count_matched_tag', $direction);
+        )->orderBy( 'count_matched_tag', $direction );
     }
 
     /**
@@ -232,8 +218,7 @@ trait Taggable
      *
      * @return \Illuminate\Support\Collection
      */
-    public function getTaggedIds($tags)
-    {
-        return Tag::usedBy($this)->whereIn('tags.name', mb_array_sure($tags))->get()->pluck('taggable_id');
+    public function getTaggedIds( $tags ) {
+        return Tag::usedBy( $this )->whereIn( 'tags.name', mb_array_sure( $tags ) )->get()->pluck( 'taggable_id' );
     }
 }
