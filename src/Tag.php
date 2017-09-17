@@ -26,10 +26,7 @@ class Tag extends Eloquent
      */
     public static function deleteUnused()
     {
-        static::leftJoin('taggables', function ($join) {
-            /** @var \Illuminate\Database\Query\JoinClause $join */
-            $join->on('taggables.tag_id', '=', 'tags.id')->whereNull('taggables.tag_id');
-        })->delete();
+        static::leftJoin('taggables', 'taggables.tag_id', '=', 'tags.id')->whereNull('taggables.tag_id')->delete();
     }
 
     /**
