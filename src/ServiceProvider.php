@@ -26,7 +26,7 @@ class ServiceProvider extends BaseServiceProvider
                 __DIR__ . '/../config/tag.php' => config_path('tag.php'),
             ]
         );
-        if (app()->getAlias('layout')) {
+        if ($this->app->has('layout')) {
             app('layout')->registerWidgetTypes(config('tag.widgets'));
         }
     }
