@@ -2,8 +2,8 @@
 return [
     'widgets' => [
         'tags' => [
-            'title'       => 'trans::tag::widget.tags.title',
-            'description' => 'trans::tag::widget.tags.description',
+            'title'       => '__::Tags',
+            'description' => '__::Display Tags Cloud',
             'icon'        => 'tags',
             'class'       => \Minhbang\Tag\TagsWidget::class,
         ],

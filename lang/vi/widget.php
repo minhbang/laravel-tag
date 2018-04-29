@@ -1,12 +1,10 @@
 <?php
 return [
-    'tags' => [
-        'title'           => 'Tags',
-        'description'     => 'Hiển thị Tags Cloud',
-        'tag_type'        => 'Loại Tag',
-        'tag_type_prompt' => 'Chọn Loại Tag...',
-        'route_show'      => 'Route trang xem Danh mục',
-        'tag_css'         => 'CSS mỗi tag',
-        'show_count'      => 'Đếm số lượng',
-    ],
+    'tags.title' => 'Tags',
+    'tags.description' => 'Hiển thị Tags Cloud',
+    'tags.tag_type' => 'Loại Tag',
+    'tags.tag_type_prompt' => 'Chọn Loại Tag...',
+    'tags.route_show' => 'Route trang tags',
+    'tags.tag_css' => 'CSS mỗi tag',
+    'tags.show_count' => 'Đếm số lượng',
 ];

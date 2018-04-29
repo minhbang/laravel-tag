@@ -9,7 +9,7 @@
         <div class="col-xs-8">
             <div class="form-group {{ $errors->has("tag_type") ? ' has-error':'' }}">
                 {!! Form::label("tag_type", $labels['tag_type'], ['class' => "control-label"]) !!}
-                {!! Form::select('tag_type', $widget->typeInstance()->getTagTypes(), null, ['prompt' => trans('tag::widget.tags.tag_type_prompt'), 'class' => 'form-control selectize']) !!}
+                {!! Form::select('tag_type', $widget->typeInstance()->getTagTypes(), null, ['prompt' => __('Select Tag type...'), 'class' => 'form-control selectize']) !!}
                 @if($errors->has('tag_type'))
                     <p class="help-block">{{ $errors->first('tag_type') }}</p>
                 @endif
@@ -17,7 +17,7 @@
             <div class="form-group {{ $errors->has("route_show") ? ' has-error':'' }}">
                 {!! Form::label("route_show", $labels['route_show'], ['class' => "control-label"]) !!}
                 {!! Form::select(
-                    "route_show", $widget->typeInstance()->getRoutes(), null, ['prompt' => trans('layout::common.select_route'), 'class' => 'form-control selectize'])
+                    "route_show", $widget->typeInstance()->getRoutes(), null, ['prompt' => __('Select route...'), 'class' => 'form-control selectize'])
                 !!}
                 @if($errors->has('route_show'))
                     <p class="help-block">{{ $errors->first('route_show') }}</p>
@@ -35,7 +35,7 @@
             <div class="form-group {{ $errors->has("show_count") ? ' has-error':'' }}">
                 {!! Form::label("show_count",  $labels['show_count'], ['class'=> 'control-label']) !!}
                 <br>
-                {!! Form::checkbox("show_count", 1, null,['class'=>'switch', 'data-on-text'=>trans('common.yes'), 'data-off-text'=>trans('common.no')]) !!}
+                {!! Form::checkbox("show_count", 1, null,['class'=>'switch', 'data-on-text'=>__('Yes'), 'data-off-text'=>__('No')]) !!}
                 @if($errors->has("show_count"))
                     <p class="help-block">{{ $errors->first("show_count") }}</p>
                 @endif

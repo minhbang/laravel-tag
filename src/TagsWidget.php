@@ -58,10 +58,10 @@ class TagsWidget extends WidgetType {
 
     protected function dataAttributes() {
         return [
-            [ 'name' => 'tag_type', 'title' => trans( 'tag::widget.tags.tag_type' ), 'rule' => 'required|max:255', 'default' => null ],
-            [ 'name' => 'route_show', 'title' => trans( 'tag::widget.tags.route_show' ), 'rule' => 'required|max:255', 'default' => '#' ],
-            [ 'name' => 'tag_css', 'title' => trans( 'tag::widget.tags.tag_css' ), 'rule' => 'max:255', 'default' => 'label label-primary' ],
-            [ 'name' => 'show_count', 'title' => trans( 'tag::widget.tags.show_count' ), 'rule' => 'integer', 'default' => 0 ],
+            [ 'name' => 'tag_type', 'title' => __('Tag type' ), 'rule' => 'required|max:255', 'default' => null ],
+            [ 'name' => 'route_show', 'title' => __('Tags page route' ), 'rule' => 'required|max:255', 'default' => '#' ],
+            [ 'name' => 'tag_css', 'title' => __('Tag item CSS' ), 'rule' => 'max:255', 'default' => 'label label-primary' ],
+            [ 'name' => 'show_count', 'title' => __('Show count' ), 'rule' => 'integer', 'default' => 0 ],
         ];
     }
 }

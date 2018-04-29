@@ -16,13 +16,13 @@ class ServiceProvider extends BaseServiceProvider
      */
     public function boot()
     {
-        $this->loadTranslationsFrom(__DIR__ . '/../lang', 'tag');
+        //$this->loadTranslationsFrom(__DIR__ . '/../lang', 'tag');
         $this->loadViewsFrom(__DIR__ . '/../views', 'tag');
         $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
         $this->publishes(
             [
                 __DIR__ . '/../views' => base_path('resources/views/vendor/tag'),
-                __DIR__ . '/../lang' => base_path('resources/lang/vendor/tag'),
+                //__DIR__ . '/../lang' => base_path('resources/lang/vendor/tag'),
                 __DIR__ . '/../config/tag.php' => config_path('tag.php'),
             ]
         );
